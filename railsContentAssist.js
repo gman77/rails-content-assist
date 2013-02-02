@@ -29,7 +29,7 @@ var RailsContentAssistProvider = (function() {
 			var prefix = context.prefix;
 			var keywords = [];
 		
-			/* simple if then instruction */
+			/* if then instruction */
 			if("if".indexOf(prefix) === 0){
 				var proposal = "if condition then\n" + whitespace + "\t\n" + whitespace + "end";
 				proposal = proposal.substring(prefix.length, proposal.length);
@@ -42,7 +42,7 @@ var RailsContentAssistProvider = (function() {
 				});
 			}
 			
-			/* simple if-then-else instruction */
+			/* if-then-else instruction */
 			if("if".indexOf(prefix) === 0){
 				var proposal = "if condition then\n" + whitespace + "\t\n" + whitespace + "else\n" + whitespace + "\t\n" + whitespace + "end";
 				proposal = proposal.substring(prefix.length, proposal.length);
@@ -51,6 +51,20 @@ var RailsContentAssistProvider = (function() {
 					proposal : proposal,
 					description : "if - if-then-else block",
 					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* if condition : statement instruction */
+			if("if".indexOf(prefix) === 0){
+				var proposal = "if condition : statement end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "if - if condition : statement",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}, 
+								{offset: offset + proposal.indexOf("statement"), length: "statement".length}],
 					escapePosition : offset + proposal.length
 				});
 			}
@@ -99,7 +113,7 @@ var RailsContentAssistProvider = (function() {
 				var keyword = rubyKeywords[i];
 				if(keyword.indexOf(prefix) === 0){
 					keywords.push({
-						proposal : keyword.substring(prefix.length, keyword.length),
+						proposal : prefix.length < keyword.length ? keyword.substring(prefix.length, keyword.length) : " ",
 						description : keyword + " - ruby restricted keyword"
 					});
 				}
@@ -110,7 +124,7 @@ var RailsContentAssistProvider = (function() {
 				var keyword = railsKeywords[i];
 				if(keyword.indexOf(prefix) === 0){
 					keywords.push({
-						proposal : keyword.substring(prefix.length, keyword.length),
+						proposal : prefix.length < keyword.length ? keyword.substring(prefix.length, keyword.length) : " ",
 						description : keyword + " - rails restricted keyword"
 					});
 				}
@@ -121,7 +135,7 @@ var RailsContentAssistProvider = (function() {
 				var keyword = magicFieldNames[i];
 				if(keyword.indexOf(prefix) === 0){
 					keywords.push({
-						proposal : keyword.substring(prefix.length, keyword.length),
+						proposal : prefix.length < keyword.length ? keyword.substring(prefix.length, keyword.length) : " ",
 						description : keyword + " - magic field name"
 					});
 				}
