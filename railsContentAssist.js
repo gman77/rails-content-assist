@@ -13,6 +13,54 @@ var RailsContentAssistProvider = (function() {
 	RailsContentAssistProvider.prototype = {
 		computeProposals: function(buffer, offset, context) {
 			
+			var proposals = [];
+			
+			/* add control flow keywords */
+			proposals = proposals.concat(this._addControlFlowKeywords(buffer, offset, context));
+			
+			/* add static keywords */
+			proposals = proposals.concat(this._addStaticKeywords(buffer, offset, context));
+			
+			return proposals;
+		},
+		
+		_addControlFlowKeywords : function(buffer, offset, context){
+			var prefix = context.prefix;
+			var keywords = [];
+		
+			/* simple if then instruction */
+			if("if".indexOf(prefix) === 0){
+				var proposal = "if condition then\n\t\nend";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "if - if-then block",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* simple if-then-else instruction */
+			if("if".indexOf(prefix) === 0){
+				var proposal = "if condition then\n\t\nelse\n\t\nend";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "if - if-then-else block",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			return keywords;
+		},
+		
+		/*
+		 *	Returns an array of static ruby and rails keywords.
+		 */
+		_addStaticKeywords : function(buffer, offset, context){
 			/* ruby restricted keywords */
 			var rubyKeywords = ["BEGIN","END","__ENCODING__","__END__","__FILE__","__LINE__","alias","and","begin",
 				"break","case","class","def","defined?","do","else","elsif","end","ensure","false","for",
@@ -42,15 +90,15 @@ var RailsContentAssistProvider = (function() {
 			var magicFieldNames = ["created_at","created_on","updated_at","updated_on","lock_version","type","id","position",
 				"parent_id","lft","rgt","quote_value","template"];
 			
-			var proposals = [];
+			var keywords = [];
 			var prefix = context.prefix;
 			
 			/* insert ruby restricted keywords */
 			for(var i=0; i<rubyKeywords.length; ++i){
 				var keyword = rubyKeywords[i];
 				if(keyword.indexOf(prefix) === 0){
-					proposals.push({
-						proposal : keyword,
+					keywords.push({
+						proposal : keyword.substring(prefix.length, keyword.length),
 						description : keyword + " - ruby restricted keyword"
 					});
 				}
@@ -60,8 +108,8 @@ var RailsContentAssistProvider = (function() {
 			for(var i=0; i<railsKeywords.length; ++i){
 				var keyword = railsKeywords[i];
 				if(keyword.indexOf(prefix) === 0){
-					proposals.push({
-						proposal : keyword,
+					keywords.push({
+						proposal : keyword.substring(prefix.length, keyword.length),
 						description : keyword + " - rails restricted keyword"
 					});
 				}
@@ -71,14 +119,14 @@ var RailsContentAssistProvider = (function() {
 			for(var i=0; i<magicFieldNames.length; ++i){
 				var keyword = magicFieldNames[i];
 				if(keyword.indexOf(prefix) === 0){
-					proposals.push({
-						proposal : keyword,
+					keywords.push({
+						proposal : keyword.substring(prefix.length, keyword.length),
 						description : keyword + " - magic field name"
 					});
 				}
 			}
 			
-			return proposals;
+			return keywords;
 		}
 	};
 	return RailsContentAssistProvider;
