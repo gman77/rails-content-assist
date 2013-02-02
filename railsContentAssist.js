@@ -25,12 +25,13 @@ var RailsContentAssistProvider = (function() {
 		},
 		
 		_addControlFlowKeywords : function(buffer, offset, context){
+			var whitespace = this._leadingWhitespace(buffer, offset);
 			var prefix = context.prefix;
 			var keywords = [];
 		
 			/* simple if then instruction */
 			if("if".indexOf(prefix) === 0){
-				var proposal = "if condition then\n\t\nend";
+				var proposal = "if condition then\n" + whitespace + "\t\n" + whitespace + "end";
 				proposal = proposal.substring(prefix.length, proposal.length);
 				
 				keywords.push({
@@ -43,7 +44,7 @@ var RailsContentAssistProvider = (function() {
 			
 			/* simple if-then-else instruction */
 			if("if".indexOf(prefix) === 0){
-				var proposal = "if condition then\n\t\nelse\n\t\nend";
+				var proposal = "if condition then\n" + whitespace + "\t\n" + whitespace + "else\n" + whitespace + "\t\n" + whitespace + "end";
 				proposal = proposal.substring(prefix.length, proposal.length);
 				
 				keywords.push({
@@ -127,6 +128,31 @@ var RailsContentAssistProvider = (function() {
 			}
 			
 			return keywords;
+		},
+		
+		/**
+		 * Returns a string of all the whitespace at the start of the current line.
+		 * @param {String} buffer The document
+		 * @param {Integer} offset The current selection offset
+		 */
+		_leadingWhitespace : function(buffer, offset) {
+			var whitespace = "";
+			offset = offset-1;
+			while (offset > 0) {
+				var c = buffer.charAt(offset--);
+				if (c === '\n' || c === '\r') {
+					//we hit the start of the line so we are done
+					break;
+				}
+				if (/\s/.test(c)) {
+					//we found whitespace to add it to our result
+					whitespace = c.concat(whitespace);
+				} else {
+					//we found non-whitespace, so reset our result
+					whitespace = "";
+				}
+			}
+			return whitespace;
 		}
 	};
 	return RailsContentAssistProvider;
