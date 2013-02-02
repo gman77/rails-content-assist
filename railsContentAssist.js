@@ -15,6 +15,9 @@ var RailsContentAssistProvider = (function() {
 			
 			var proposals = [];
 			
+			/* add object keywords */
+			proposals = proposals.concat(this._addObjectKeywords(buffer, offset, context));
+			
 			/* add control flow keywords */
 			proposals = proposals.concat(this._addControlFlowKeywords(buffer, offset, context));
 			
@@ -22,6 +25,40 @@ var RailsContentAssistProvider = (function() {
 			proposals = proposals.concat(this._addStaticKeywords(buffer, offset, context));
 			
 			return proposals;
+		},
+		
+		_addObjectKeywords : function(buffer, offset, context){
+			var whitespace = this._leadingWhitespace(buffer, offset);
+			var prefix = context.prefix;
+			var keywords = [];
+			
+			/* class keyword */
+			if("class".indexOf(prefix) === 0){
+				var proposal = "class name\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "class - class definition",
+					positions : [{offset: offset + proposal.indexOf("name"), length: "name".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* def keyword */
+			if("def".indexOf(prefix) === 0){
+				var proposal = "def method\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "def - method definition",
+					positions : [{offset: offset + proposal.indexOf("method"), length: "method".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			return keywords;
 		},
 		
 		_addControlFlowKeywords : function(buffer, offset, context){
@@ -160,6 +197,19 @@ var RailsContentAssistProvider = (function() {
 					description : "for - for-in loop",
 					positions : [{offset: offset + proposal.indexOf("element"), length: "element".length},
 								{offset: offset + proposal.indexOf("collection"), length: "collection".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* begin block */
+			if("begin".indexOf(prefix) === 0){
+				var proposal = "begin\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "begin - begin block",
+					positions : [],
 					escapePosition : offset + proposal.length
 				});
 			}
