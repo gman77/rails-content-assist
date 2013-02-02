@@ -227,6 +227,9 @@ var RailsContentAssistProvider = (function() {
 				"if","in","module","next","nil","not","or","redo","rescue","retry","return","self","super",
 				"then","true","undef","unless","until","when","while","yield"];
 				
+			/* common keywords used in ruby on rails */
+			var railsCommonKeywords = ["public","private","protected"];
+				
 			/* rails restricted keywords */
 			var railsKeywords = ["ADDITIONAL_LOAD_PATHS","ARGF","ARGV","ActionController","ActionView","ActiveRecord",
 			    "ArgumentError","Array","BasicSocket","Benchmark","Bignum","Binding","CGI","CGIMethods","CROSS_COMPILING",
@@ -260,6 +263,17 @@ var RailsContentAssistProvider = (function() {
 					keywords.push({
 						proposal : prefix.length < keyword.length ? keyword.substring(prefix.length, keyword.length) : " ",
 						description : keyword + " - ruby restricted keyword"
+					});
+				}
+			}
+			
+			/* insert common rails keywords */
+			for(var i=0; i<railsCommonKeywords.length; ++i){
+				var keyword = railsCommonKeywords[i];
+				if(keyword.indexOf(prefix) === 0){
+					keywords.push({
+						proposal : prefix.length < keyword.length ? keyword.substring(prefix.length, keyword.length) : " ",
+						description : keyword + " - rails keyword"
 					});
 				}
 			}
