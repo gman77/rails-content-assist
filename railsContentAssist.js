@@ -69,6 +69,101 @@ var RailsContentAssistProvider = (function() {
 				});
 			}
 			
+			/* unless then instruction */
+			if("unless".indexOf(prefix) === 0){
+				var proposal = "unless condition then\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "unless - unless-then block",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* unless-then-else instruction */
+			if("unless".indexOf(prefix) === 0){
+				var proposal = "unless condition then\n" + whitespace + "\t\n" + whitespace + "else\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "unless - unless-then-else block",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* unless condition : statement instruction */
+			if("unless".indexOf(prefix) === 0){
+				var proposal = "unless condition : statement end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "unless - unless condition : statement",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}, 
+								{offset: offset + proposal.indexOf("statement"), length: "statement".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* case-when instruction */
+			if("case".indexOf(prefix) === 0){
+				var proposal = "case variable\n" + whitespace + "when condition\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "case - case-when block",
+					positions : [{offset: offset + proposal.indexOf("variable"), length: "variable".length}, 
+								{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			
+			/* while-do instruction */
+			if("while".indexOf(prefix) === 0){
+				var proposal = "while condition do\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "while - while-do loop",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* until-do instruction */
+			if("until".indexOf(prefix) === 0){
+				var proposal = "until condition do\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "until - until-do loop",
+					positions : [{offset: offset + proposal.indexOf("condition"), length: "condition".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* for-in instruction */
+			if("for".indexOf(prefix) === 0){
+				var proposal = "for element in collection\n" + whitespace + "\t\n" + whitespace + "end";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "for - for-in loop",
+					positions : [{offset: offset + proposal.indexOf("element"), length: "element".length},
+								{offset: offset + proposal.indexOf("collection"), length: "collection".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
 			return keywords;
 		},
 		
