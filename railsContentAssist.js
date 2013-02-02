@@ -37,6 +37,10 @@ var RailsContentAssistProvider = (function() {
 			    "SystemExit","SystemStackError","TCPServer","TCPSocket","TCPserver","TCPsocket","TOPLEVEL_BINDING","TRUE","Task","Text",
 			    "Thread","ThreadError","ThreadGroup","Time","Transaction","TrueClass","TypeError","UDPSocket","UDPsocket","UNIXServer",
 			    "UNIXSocket","UNIXserver","UNIXsocket","UnboundMethod","Url","VERSION","Verbose","YAML","ZeroDivisionError"];
+			    
+			/* magic field names */
+			var magicFieldNames = ["created_at","created_on","updated_at","updated_on","lock_version","type","id","position",
+				"parent_id","lft","rgt","quote_value","template"];
 			
 			var proposals = [];
 			var prefix = context.prefix;
@@ -59,6 +63,17 @@ var RailsContentAssistProvider = (function() {
 					proposals.push({
 						proposal : keyword,
 						description : keyword + " - rails restricted keyword"
+					});
+				}
+			}
+			
+			/* magic field names */
+			for(var i=0; i<magicFieldNames.length; ++i){
+				var keyword = magicFieldNames[i];
+				if(keyword.indexOf(prefix) === 0){
+					proposals.push({
+						proposal : keyword,
+						description : keyword + " - magic field name"
 					});
 				}
 			}
