@@ -4,16 +4,22 @@
 		<meta name="copyright" content="Maciej Bendkowski <maciej.bendkowski@gmail.com>">
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script src="plugin.js"></script>
+		
+		<script src="staticContentProvider.js"></script>
+		<script src="controlFlowContentProvider.js"></script>
+		<script src="classContentProvider.js"></script>
 		<script src="railsContentAssist.js"></script>
+		
 		<script type="text/javascript">
 			/* global window eclipse RubyContentAssistProvider */
 			window.onload = function() {
 				var provider = new eclipse.PluginProvider();
 			
 				// Content assist
-				provider.registerServiceProvider("orion.edit.contentAssist", new RailsContentAssistProvider(), {
-					name: "Rails content assist",
-					pattern: "\\.(ru|rb|erb|yml)$"
+				provider.registerServiceProvider("orion.edit.contentAssist", new RailsContentAssistProvider(
+					new StaticContentProvider(), new ControlFlowContentProvider(), new ClassContentProvider()), {
+						name: "Rails content assist",
+						pattern: "\\.(ru|rb|erb|yml)$"
 				});
 			
 				provider.connect();
