@@ -8,10 +8,11 @@
  */
 var RailsContentAssistProvider = (function() {
 
-	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider, textHelperContentProvider){
+	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider, urlHelperContentProvider, textHelperContentProvider){
 		this.staticContentProvider = staticContentProvider;
 		this.controlFlowContentProvider = controlFlowContentProvider;
 		this.classFlowContentProvider = classFlowContentProvider;
+		this.urlHelperContentProvider = urlHelperContentProvider;
 		this.textHelperContentProvider = textHelperContentProvider;
 	}
 	
@@ -25,7 +26,9 @@ var RailsContentAssistProvider = (function() {
 			/* add control flow keywords */
 			proposals = proposals.concat(this.controlFlowContentProvider.computeProposals(buffer, offset, context));
 			
+			
 			/* add rails common helpers keywords */
+			proposals = proposals.concat(this.urlHelperContentProvider.computeProposals(buffer, offset, context));
 			proposals = proposals.concat(this.textHelperContentProvider.computeProposals(buffer, offset, context));
 			
 			/* add static keywords */

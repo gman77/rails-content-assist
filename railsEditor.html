@@ -8,7 +8,10 @@
 		<script src="staticContentProvider.js"></script>
 		<script src="controlFlowContentProvider.js"></script>
 		<script src="classContentProvider.js"></script>
+		
+		<script src="urlHelperContentProvider.js"></script>
 		<script src="textHelperContentProvider.js"></script>
+		
 		<script src="railsContentAssist.js"></script>
 		
 		<script type="text/javascript">
@@ -18,7 +21,8 @@
 			
 				// Content assist
 				provider.registerServiceProvider("orion.edit.contentAssist", new RailsContentAssistProvider(
-					new StaticContentProvider(), new ControlFlowContentProvider(), new ClassContentProvider(), new TextHelperContentProvider()), {
+					new StaticContentProvider(), new ControlFlowContentProvider(), new ClassContentProvider(), 
+					new UrlHelperContentProvider(), new TextHelperContentProvider()), {
 						name: "Rails content assist",
 						pattern: "\\.(ru|rb|erb|yml)$"
 				});
