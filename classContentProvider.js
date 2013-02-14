@@ -43,7 +43,40 @@ var ClassContentProvider = (function() {
 				});
 			}
 			
+			/* hack: add leading @ to given prefix */
+			prefix = "@" + prefix;
+			
+			/* class fields */
+			var gatheredFields = this._gatherFields(buffer, prefix);
+			for(var i=0; i<gatheredFields.length; ++i){
+				var field = gatheredFields[i];
+					
+				if(field.indexOf(prefix) === 0){
+					keywords.push({
+						proposal : prefix.length < field.length ? field.substring(prefix.length, field.length) : " ",
+						description : field + " - class field"
+					});
+				}
+			}
+			
 			return keywords;
+		},
+		
+		/**
+		 * Gathers all used fields from the given buffer.
+		 */
+		_gatherFields : function(buffer, prefix){
+			var fields = [];
+			while(buffer.indexOf("@") !== -1){
+				var fieldSubstring = buffer.substring(buffer.indexOf("@"));
+				var fieldEndIndex = fieldSubstring.indexOf(" ");
+				
+				var keyword = fieldSubstring.substring(0, fieldEndIndex);
+				if(fields.indexOf(keyword) === -1){	fields.push(keyword); }
+				buffer = fieldSubstring.substring(fieldEndIndex);
+			}
+			
+			return fields;
 		},
 		
 		/**
