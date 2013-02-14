@@ -8,10 +8,11 @@
  */
 var RailsContentAssistProvider = (function() {
 
-	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider){
+	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider, textHelperContentProvider){
 		this.staticContentProvider = staticContentProvider;
 		this.controlFlowContentProvider = controlFlowContentProvider;
 		this.classFlowContentProvider = classFlowContentProvider;
+		this.textHelperContentProvider = textHelperContentProvider;
 	}
 	
 	RailsContentAssistProvider.prototype = {
@@ -23,6 +24,9 @@ var RailsContentAssistProvider = (function() {
 			
 			/* add control flow keywords */
 			proposals = proposals.concat(this.controlFlowContentProvider.computeProposals(buffer, offset, context));
+			
+			/* add rails common helpers keywords */
+			proposals = proposals.concat(this.textHelperContentProvider.computeProposals(buffer, offset, context));
 			
 			/* add static keywords */
 			proposals = proposals.concat(this.staticContentProvider.computeProposals(buffer, offset, context));
