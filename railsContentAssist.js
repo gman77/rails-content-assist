@@ -8,12 +8,15 @@
  */
 var RailsContentAssistProvider = (function() {
 
-	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider, urlHelperContentProvider, textHelperContentProvider){
+	function RailsContentAssistProvider(staticContentProvider, controlFlowContentProvider, classFlowContentProvider, urlHelperContentProvider,
+							textHelperContentProvider, activeRecordContentProvider){
+		
 		this.staticContentProvider = staticContentProvider;
 		this.controlFlowContentProvider = controlFlowContentProvider;
 		this.classFlowContentProvider = classFlowContentProvider;
 		this.urlHelperContentProvider = urlHelperContentProvider;
 		this.textHelperContentProvider = textHelperContentProvider;
+		this.activeRecordContentProvider = activeRecordContentProvider;
 	}
 	
 	RailsContentAssistProvider.prototype = {
@@ -26,6 +29,8 @@ var RailsContentAssistProvider = (function() {
 			/* add control flow keywords */
 			proposals = proposals.concat(this.controlFlowContentProvider.computeProposals(buffer, offset, context));
 			
+			/* add rails activeRecord keywords */
+			proposals = proposals.concat(this.activeRecordContentProvider.computeProposals(buffer, offset, context));
 			
 			/* add rails common helpers keywords */
 			proposals = proposals.concat(this.urlHelperContentProvider.computeProposals(buffer, offset, context));
