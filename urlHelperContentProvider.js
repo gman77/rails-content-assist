@@ -136,6 +136,45 @@ var UrlHelperContentProvider = (function() {
 				});
 			}
 			
+			/* render helper */
+			if("render".indexOf(prefix) === 0){
+				var proposal = "render :url";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "render - rails rendering helper",
+					positions : [{offset: offset + proposal.indexOf(":url"), length: ":url".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* redirect_to helper */
+			if("redirect_to".indexOf(prefix) === 0){
+				var proposal = "redirect_to :url";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "redirect_to - rails rendering helper",
+					positions : [{offset: offset + proposal.indexOf(":url"), length: ":url".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
+			/* head helper */
+			if("head".indexOf(prefix) === 0){
+				var proposal = "head :url";
+				proposal = proposal.substring(prefix.length, proposal.length);
+				
+				keywords.push({
+					proposal : proposal,
+					description : "head - rails rendering helper",
+					positions : [{offset: offset + proposal.indexOf(":url"), length: ":url".length}],
+					escapePosition : offset + proposal.length
+				});
+			}
+			
 			return keywords;
 		},
 		
